@@ -15,6 +15,7 @@ class DatabaseClient(BaseDatabaseClient):
         host = settings_dict['OPTIONS'].get('host', settings_dict['HOST'])
         port = settings_dict['OPTIONS'].get('port', settings_dict['PORT'])
         defaults_file = settings_dict['OPTIONS'].get('read_default_file')
+        charset = settings_dict['OPTIONS'].get('charset', '')
         # Seems to be no good way to set sql_mode with CLI.
 
         if defaults_file:
@@ -32,9 +33,10 @@ class DatabaseClient(BaseDatabaseClient):
             args += ["--port=%s" % port]
         if db:
             args += [db]
+        if charset:
+            args += ["--default-character-set=%s" % charset]
 
         if os.name == 'nt':
             sys.exit(os.system(" ".join(args)))
         else:
             os.execvp(self.executable_name, args)
-
